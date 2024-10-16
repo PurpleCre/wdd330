@@ -12,7 +12,7 @@
     "test": "jest"
     
   },
-  "author": "Shane Thompson",
+  "author": "Jonathan Aloya",
   "license": "ISC",
   "devDependencies": {
     "eslint": "^8.56.0",
