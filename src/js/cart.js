@@ -1,28 +1,41 @@
-import { getLocalStorage } from "./utils.mjs";
+class Cart {
+  constructor() {
+    this.items = JSON.parse(localStorage.getItem("cart")) || [];
+  }
 
-function renderCartContents() {
-  const cartItems = getLocalStorage("so-cart");
-  const htmlItems = cartItems.map((item) => cartItemTemplate(item));
-  document.querySelector(".product-list").innerHTML = htmlItems.join("");
+  addItem(product) {
+    this.items.push(product);
+    this.save();
+  }
+
+  removeItem(productId) {
+    this.items = this.items.filter((item) => item.Id !== productId);
+    this.save();
+  }
+
+  getItems() {
+    return this.items;
+  }
+
+  save() {
+    localStorage.setItem("cart", JSON.stringify(this.items));
+  }
 }
 
-function cartItemTemplate(item) {
-  const newItem = `<li class="cart-card divider">
-  <a href="#" class="cart-card__image">
-    <img
-      src="${item.Image}"
-      alt="${item.Name}"
-    />
-  </a>
-  <a href="#">
-    <h2 class="card__name">${item.Name}</h2>
-  </a>
-  <p class="cart-card__color">${item.Colors[0].ColorName}</p>
-  <p class="cart-card__quantity">qty: 1</p>
-  <p class="cart-card__price">$${item.FinalPrice}</p>
-</li>`;
+export default new Cart();
+import cart from "./cart.js";
 
-  return newItem;
-}
+document.addEventListener("DOMContentLoaded", () => {
+  const cartListElement = document.querySelector(".cart-list");
+  const items = cart.getItems();
 
-renderCartContents();
+  if (items.length === 0) {
+    cartListElement.innerHTML = "<li>Your cart is empty.</li>";
+  } else {
+    items.forEach((item) => {
+      const listItem = document.createElement("li");
+      listItem.textContent = `${item.NameWithoutBrand} - $${item.FinalPrice}`;
+      cartListElement.appendChild(listItem);
+    });
+  }
+});
