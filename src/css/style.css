@@ -94,6 +94,9 @@ button {
 .divider {
   border-bottom: 2px solid var(--primary-color);
 }
+.title {
+  text-transform: capitalize;
+}
 /* End utility classes */
 
 /* Cart icon styles */
@@ -112,6 +115,39 @@ button {
 
 /* End cart icon styles */
 
+/* product grid styles */
+.product-grid {
+  list-style-type: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  text-align: center;
+  color: var(--dark-grey);
+  padding-left: 0;
+}
+
+.product-grid > li {
+  width: 150px;
+  /* border: 1px solid var(--light-grey); */
+  padding: 0.5em;
+  margin: 1em;
+}
+.product-grid h2 {
+  margin: 0;
+
+  font-size: 1.2em;
+}
+.product-grid a {
+  text-decoration: none;
+}
+.product-grid a:link,
+.product-grid a:visited {
+  color: var(--dark-grey);
+}
+.product-grid a:hover {
+  text-decoration: underline;
+}
+
 .mission {
   padding: 0 0.5em;
   /* margin: 0.5em 0; */
@@ -119,23 +155,6 @@ button {
   max-width: 600px;
   margin: auto;
 }
-
-/* ... existing styles ... */
-
-.total-amount {
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #f8f9fa;
-  border-radius: 5px;
-  text-align: right;
-}
-
-.total-amount h3 {
-  margin: 0;
-  color: #333;
-  font-size: 1.2em;
-}
-
 .products {
   padding: 0.5em;
 }
@@ -157,6 +176,7 @@ button {
   padding: 0.5em;
   border: 1px solid var(--light-grey);
   max-width: 250px;
+  text-align: center;
 }
 .product-card h2,
 .product-card h3,
@@ -219,44 +239,10 @@ button {
   grid-column: 3;
 }
 
-.category-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-  margin-top: 20px;
-}
-
-.category-card {
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 10px;
-  text-align: center;
-  text-decoration: none;
-  color: #333;
-  transition: all 0.3s ease;
-}
-
-.category-card:hover {
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.category-card img {
-  max-width: 100%;
-  height: auto;
-}
-
-.category-card h3 {
-  margin-top: 10px;
-}
-
 @media screen and (min-width: 500px) {
   body {
     max-width: 1080px;
     margin: auto;
-  }
-
-  .category-grid {
-    grid-template-columns: repeat(4, 1fr);
   }
   .mission {
     font-size: 1.2em;
