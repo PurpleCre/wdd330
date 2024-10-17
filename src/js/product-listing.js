@@ -6,14 +6,16 @@ import cart from "./cart.js";
 loadHeaderFooter();
 
 const category = getParam("category");
+console.log(`category: ${category}`);
 const dataSource = new ProductData();
 const listElement = document.querySelector(".product-list");
 const categoryNameElement = document.querySelector(".category-name");
+console.log(`element: ${categoryNameElement}`)
 
 // Update the category name in the heading
 if (category) {
-  categoryNameElement.textContent =
-    category.charAt(0).toUpperCase() + category.slice(1);
+  // categoryNameElement.textContent =
+  //   category.charAt(0).toUpperCase() + category.slice(1);
   const myList = new ProductList(category, dataSource, listElement);
   myList.init();
 
