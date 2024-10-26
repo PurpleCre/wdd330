@@ -1,41 +1,33 @@
-class Cart {
-  constructor() {
-    this.items = JSON.parse(localStorage.getItem("cart")) || [];
-  }
+import { loadHeaderFooter } from "./utils.mjs";
+import ShoppingCart from "./ShoppingCart.mjs";
+import { updateCartItem } from "./ShoppingCart.mjs";
 
-  addItem(product) {
-    this.items.push(product);
-    this.save();
-  }
+loadHeaderFooter();
 
-  removeItem(productId) {
-    this.items = this.items.filter((item) => item.Id !== productId);
-    this.save();
-  }
+const cart = new ShoppingCart("so-cart", ".product-list");
+cart.renderCartContents();
+// event listener to remove item from cart
+cart.removeItemListener();
 
-  getItems() {
-    return this.items;
-  }
-
-  save() {
-    localStorage.setItem("cart", JSON.stringify(this.items));
-  }
-}
-
-export default new Cart();
-import cart from "./cart.js";
-
-document.addEventListener("DOMContentLoaded", () => {
-  const cartListElement = document.querySelector(".cart-list");
-  const items = cart.getItems();
-
-  if (items.length === 0) {
-    cartListElement.innerHTML = "<li>Your cart is empty.</li>";
-  } else {
-    items.forEach((item) => {
-      const listItem = document.createElement("li");
-      listItem.textContent = `${item.NameWithoutBrand} - $${item.FinalPrice}`;
-      cartListElement.appendChild(listItem);
-    });
-  }
+// event listener to go to checkout page
+document.querySelector(".checkout-button").addEventListener("click", () => {
+  window.location.href = "/checkout/index.html";
 });
+
+// Event listener for Updating Product Quantity
+// Leads to update the quantity in the cart
+// It is saved it to local storage:
+document.querySelectorAll(".qty").forEach((input) => {
+  input.addEventListener("change", function (event) {
+    const newQuantity = parseInt(event.target.value);
+    const itemId = event.target.getAttribute("data-id");
+
+    if (newQuantity < 1 || newQuantity > 100) {
+      alert("Quantity must be between 1 and 100");
+      return;
+    }
+    // Update the cart with the new quantity
+    updateCartItem("so-cart", itemId, newQuantity);
+  });
+});
+
