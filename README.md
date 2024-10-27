@@ -21,4 +21,5 @@ Use this as a starting point to complete the WDD 330 team activity: the SleepOut
 
 
 ## Website
-'https://spiffy-gingersnap-e8fb19.netlify.app/
+https://wdd330camp.netlify.app
+https://purplecre.github.io/wdd330/
