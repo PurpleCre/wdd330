@@ -1,25 +1,33 @@
 import { getLocalStorage, setLocalStorage } from "./utils.mjs";
 
 function cartItemTemplate(item) {
+  // Check if item has the necessary properties, and provide fallback values if missing
+  const imageUrl = item.Images && item.Images.PrimaryMedium ? item.Images.PrimaryMedium : "placeholder.jpg"; // Use a placeholder image if missing
+  const itemName = item.Name || "Unknown Item";
+  const colorName = item.Colors && item.Colors[0] && item.Colors[0].ColorName ? item.Colors[0].ColorName : "No color specified";
+  const quantity = item.Quantity || 1;
+  const price = item.FinalPrice || 0.00;
+
   const newItem = `
-  <li class="cart-card divider">
-  <a href="#" class="cart-card__image">
-      <img src="${item.Images.PrimaryMedium}" alt="${item.Name}"/>
-    </a>
-    <a href="#">
-      <h2 class="card__name">${item.Name}</h2>
-    </a>
-    <p class="cart-card__color">${item.Colors[0].ColorName}</p>
-    <p class="cart-card__quantity"> 
-    <label for="${item.Id}">Quantity </label>
-    <input type="number" id="${item.Id}" data-id="${item.Id}" class="qty" min="1" max="100" value = "${item.Quantity}" /> 
-    </p>
-    <p class="cart-card__price">$${item.FinalPrice}</p>
-    <span class="cart-card__remove-data" id="${item.Id}">X</span>  
-  </li>`;
+    <li class="cart-card divider">
+      <a href="#" class="cart-card__image">
+        <img src="${imageUrl}" alt="${itemName}"/>
+      </a>
+      <a href="#">
+        <h2 class="card__name">${itemName}</h2>
+      </a>
+      <p class="cart-card__color">${colorName}</p>
+      <p class="cart-card__quantity"> 
+        <label for="${item.Id}">Quantity </label>
+        <input type="number" id="${item.Id}" data-id="${item.Id}" class="qty" min="1" max="100" value="${quantity}" /> 
+      </p>
+      <p class="cart-card__price">$${price.toFixed(2)}</p>
+      <span class="cart-card__remove-data" id="${item.Id}">X</span>  
+    </li>`;
 
   return newItem;
 }
+
 
 // Function to update the quantity of items in the cart 
 // and then save
@@ -35,7 +43,6 @@ export function updateCartItem(key, id, newQuantity) {
   setLocalStorage(key, cart);
 }
 
-/////////////////
 export function cartQuantityEvent(event) {
   const newQuantity = parseInt(event.target.value);
   const itemId = event.target.getAttribute("data-id");
@@ -49,9 +56,6 @@ export function cartQuantityEvent(event) {
 };
 
 
-////////////////
-
-
 // ShoppingCart save cart data in localstorage
 // is exported to / imported by cart.js
 export default class ShoppingCart {
@@ -62,38 +66,36 @@ export default class ShoppingCart {
   }
 
   renderCartContents() {
-        const cartItems = getLocalStorage(this.key);
-        const cartFooter = document.querySelector(".cart-footer");
-        const checkoutBtn = document.querySelector(".checkout-button");
-        
-        // if there are no items in the cart, display a message
-        if (!cartItems || cartItems.length === 0) {
-          document.querySelector(".product-list").innerHTML =
-            "<p>Your cart is empty</p>";
-            // cartFooter.setAttribute("hidden", "true");
-            // checkoutBtn.setAttribute("hidden", "true");
-            document.querySelector(".cart-footer").setAttribute("hidden", true); // hide the cart footer
-          document.querySelector(".checkout-button").style.display = "none"; // hide the checkout button
-          return;
-        }
-      
-        // otherwise, display the cart items
-        const htmlItems = cartItems.map((item) => cartItemTemplate(item));
-      
-        // calculate total price
-        let total = 0;
-        cartItems.forEach((item) => {
-          total += parseFloat(item.FinalPrice * item.Quantity);
-        });
-      
-        // show the cart footer
-        cartFooter.removeAttribute("hidden");
-        checkoutBtn.removeAttribute("hidden");
-        // add total price to the cart footer
-        cartFooter.innerHTML = `<p class="cart-total">Total: $${total.toFixed(2)}</p>`;
-      
-        document.querySelector(this.parentSelector).innerHTML = htmlItems.join("");
+    const cartItems = getLocalStorage(this.key);
+    const cartFooter = document.querySelector(".cart-footer");
+    const checkoutBtn = document.querySelector(".checkout-button");
+  
+    if (!cartItems || cartItems.length === 0) {
+      document.querySelector(".product-list").innerHTML = "<p>Your cart is empty</p>";
+      cartFooter.setAttribute("hidden", "true");
+      checkoutBtn.style.display = "none";
+      return;
+    }
+  
+    const htmlItems = cartItems.map((item) => cartItemTemplate(item));
+  
+    // Calculate total price safely
+    let total = 0;
+    cartItems.forEach((item) => {
+      const price = parseFloat(item.FinalPrice || 0);
+      const quantity = parseInt(item.Quantity || 1);
+      total += price * quantity;
+    });
+  
+    // Show the cart footer and add total price
+    cartFooter.removeAttribute("hidden");
+    checkoutBtn.style.display = "block";
+    cartFooter.innerHTML = `<p class="cart-total">Total: $${total.toFixed(2)}</p>`;
+  
+    // Render cart items in the container
+    document.querySelector(this.parentSelector).innerHTML = htmlItems.join("");
   }
+  
   removeItemListener() {
     const cartContainer = document.querySelector(this.parentSelector);
     
