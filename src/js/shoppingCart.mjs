@@ -3,12 +3,12 @@ import { getLocalStorage } from "./utils.mjs";
 function cartItemTemplate(item) {
   const newItem = `<li class="cart-card divider">
   <a href="#" class="cart-card__image">
-    <img
-      src="${item.Image}"
+  <img
+  src="${item.Images.PrimarySmall}"
       alt="${item.Name}"
     />
-  </a>
-  <a href="#">
+    </a>
+    <a href="#">
     <h2 class="card__name">${item.Name}</h2>
   </a>
   <p class="cart-card__color">${item.Colors[0].ColorName}</p>
@@ -26,6 +26,7 @@ export default class ShoppingCart {
   }
   renderCartContents() {
     const cartItems = getLocalStorage(this.key);
+    console.dir(cartItems);
     const htmlItems = cartItems.map((item) => cartItemTemplate(item));
     document.querySelector(this.parentSelector).innerHTML = htmlItems.join("");
   }
