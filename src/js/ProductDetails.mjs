@@ -1,4 +1,5 @@
 import { setLocalStorage, getLocalStorage } from "./utils.mjs";
+import { baseURL } from "./ProductData.mjs";
 
 function productDetailsTemplate(product) {
   return `<section class="product-detail"> <h3>${product.Brand.Name}</h3>
@@ -45,11 +46,13 @@ export default class ProductDetails {
     cartContents.push(this.product);
     setLocalStorage("so-cart", cartContents);
   }
-  renderProductDetails(selector) {
-    const element = document.querySelector(selector);
-    element.insertAdjacentHTML(
-      "afterBegin",
-      productDetailsTemplate(this.product)
-    );
+  renderProductDetails() {
+    document.querySelector('#productName').innerText = this.product.Brand.Name;
+    document.querySelector('#productNameWithoutBrand').innerText = this.product.NameWithoutBrand;
+    document.querySelector('#productImage').src = `${baseURL}${this.product.Images.PrimaryLarge}`;
+    document.querySelector('#productFinalPrice').innerText = this.product.FinalPrice;
+    document.querySelector('#productColorName').innerText = this.product.Colors[0].ColorName;
+    document.querySelector('#productDescriptionHtmlSimple').innerHTML = this.product.DescriptionHtmlSimple;
+    document.querySelector('#addToCart').dataset.id = this.product.Id;
   }
 }
